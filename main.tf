@@ -17,13 +17,27 @@ terraform {
   required_version = ">= 0.14.9"
 }
 
+provider "hcp" {}
+
 provider "aws" {
-  profile = "default"
-  region  = "us-east-2"
+  region = var.region
 }
 
+data "hcp_packer_iteration" "ubuntu" {
+  bucket_name = "learn-packer-ubuntu"
+  channel     = "production"
+}
+
+data "hcp_packer_image" "ubuntu_us_east_2" {
+  bucket_name    = "learn-packer-ubuntu"
+  cloud_provider = "aws"
+  iteration_id   = data.hcp_packer_iteration.ubuntu.ulid
+  region         = "us-east-2"
+}
+
+
 resource "aws_instance" "app_server" {
-  ami           = "ami-0a17c97b811c40ea3"
+  ami           = data.hcp_packer_image.ubuntu_us_east_2.cloud_image_id
   instance_type = "t2.micro"
 
   tags = {
