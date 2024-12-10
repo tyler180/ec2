@@ -60,12 +60,10 @@ provider "aws" {
 #   }
 # }
 
-provider "aws" {
-  region = "us-east-1"
-}
-
 resource "aws_iam_role" "example" {
-  name               = "example-role"
+  # for_each = local.iam_roles
+  # name               = each.key
+  name = "example-role"
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
