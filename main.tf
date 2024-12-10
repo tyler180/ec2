@@ -61,9 +61,8 @@ provider "aws" {
 # }
 
 resource "aws_iam_role" "example" {
-  # for_each = local.iam_roles
-  # name               = each.key
-  name = "example-role"
+  for_each = local.iam_roles
+  name               = each.key
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
