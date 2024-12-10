@@ -52,7 +52,7 @@ provider "aws" {
 
 resource "aws_instance" "app_server" {
   # for_each = toset(local.ec2_instance_types)
-  ami           = "ami-001651dd1b19ebcb6"
+  ami           = "ami-0033fe31db68da96a"
   instance_type = "t2.micro"
 
   tags = {
