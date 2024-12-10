@@ -61,7 +61,8 @@ provider "aws" {
 # }
 
 resource "aws_sqs_queue" "terraform_queue" {
-  name                      = "terraform-example-queue"
+  for_each = local.sqs_queues
+  name                      = each.key
   delay_seconds             = 90
   max_message_size          = 2048
   message_retention_seconds = 86400
