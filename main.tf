@@ -60,17 +60,24 @@ provider "aws" {
 #   }
 # }
 
-resource "aws_sqs_queue" "terraform_queue" {
-  for_each = local.sqs_queues
-  name                      = each.key
-  delay_seconds             = 90
-  max_message_size          = 2048
-  message_retention_seconds = 86400
-  receive_wait_time_seconds = 10
-
-
-  tags = {
-    Environment = "production"
-  }
+provider "aws" {
+  region = "us-east-1"
 }
+
+resource "aws_iam_role" "example" {
+  name               = "example-role"
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Principal = {
+          Service = "ec2.amazonaws.com"
+        }
+        Action = "sts:AssumeRole"
+      }
+    ]
+  })
+}
+
 
