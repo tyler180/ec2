@@ -25,9 +25,21 @@ provider "aws" {
   region = var.region
 }
 
-data "hcp_packer_iteration" "ubuntu" {
-  bucket_name = "learn-packer-ubuntu"
-  channel     = "production"
+# data "hcp_packer_iteration" "ubuntu" {
+#   bucket_name = "learn-packer-ubuntu"
+#   channel     = "production"
+# }
+
+data "hcp_packer_version" "testing" {
+  bucket_name   = "learn-packer-ubuntu"
+  channel_name = "latest"
+}
+
+data "hcp_packer_artifact" "learn-packer-ubuntu" {
+  bucket_name   = "learn-packer-ubuntu"
+  channel_name  = "latest"
+  platform      = "aws"
+  region        = "us-east-2"
 }
 
 data "hcp_packer_image" "ubuntu_us_east_2" {
@@ -39,10 +51,12 @@ data "hcp_packer_image" "ubuntu_us_east_2" {
 
 
 resource "aws_instance" "app_server" {
-  ami           = data.hcp_packer_image.ubuntu_us_east_2.cloud_image_id
+  # for_each = toset(local.ec2_instance_types)
+  ami           = "ami-001651dd1b19ebcb6"
   instance_type = "t2.micro"
 
   tags = {
     Name = "ExampleAppServerInstance"
   }
 }
+
